@@ -1,8 +1,10 @@
-# GdH - 16-7-2017 
-# Doel : Geef een datum in en valideer deze
-# 3 separate comboboxen voor dag, maand, jaar
-# Kunnen eventueel worden samengevoegd in 1 class.
-# *****************************************************************
+# GdH - DocTREE (16-7-2017)
+# Doel : Rubriceren van archief aan pdf's opgebouwd vanaf 2011. Documenten worden in een boom
+# opgenomen op basis van een categorie.
+# Datum, Documentsoort en een vrij referentieveld worden opgeslagen in een database.
+# Het is mogelijk om de bestandsnaam aan te passen in de form.
+# Het oorspronkelijke document wordt bewaard in een ./DocTreeBackup subdir van de brondir.
+# ****************************************************************************************
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
@@ -26,10 +28,11 @@ def DateValidate(year, month, day):
 def NewPDF():
     #Intitialiseren van de formvelden
     # Open de file-open dialog
-    # vul de filenaam in FnameEnt
+    # vul de filenaam in FnameEnt, 
     FullPath = askopenfilename(filetypes=[("pdf Docs","*.pdf")])
  
     web.open(FullPath)
+    #Poging om de form on top te krijgen
     window.lift()
     path, filenm=os.path.split(FullPath)
     filenmBase, filenmExt = os.path.splitext(filenm)
@@ -69,6 +72,7 @@ def SaveBt_do():
         messagebox.showerror("Filename", "Filename is leeg")
         return
     # Backup maken :
+    filenm=
     if os.path.isfile(filenm) == True:
         pass
         #Fout Backupbestand bestaat reeds
