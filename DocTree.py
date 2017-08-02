@@ -4,6 +4,7 @@
 # Datum, Documentsoort en een vrij referentieveld worden opgeslagen in een database.
 # Het is mogelijk om de bestandsnaam aan te passen in de form.
 # Het oorspronkelijke document wordt bewaard in een ./DocTreeBackup subdir van de brondir.
+# Deze versie maakt geen gebruik van classes, daarom wordt gebruik gemaakt van globals
 # ****************************************************************************************
 from tkinter import *
 from tkinter import ttk
@@ -29,15 +30,19 @@ def NewPDF():
     #Intitialiseren van de formvelden
     # Open de file-open dialog
     # vul de filenaam in FnameEnt, 
+    global FullPath
     FullPath = askopenfilename(filetypes=[("pdf Docs","*.pdf")])
- 
+ 	# Toon de pdf in de default browser
     web.open(FullPath)
     #Poging om de form on top te krijgen
     window.lift()
+   
     path, filenm=os.path.split(FullPath)
     filenmBase, filenmExt = os.path.splitext(filenm)
+    # Toon de filename in de Entrybox
     FNameEnt.insert(0, filenmBase)
-    # Toon de pdf in een browser
+	return(FullPath)
+   
  
 def FormValidate(event):
     # print(MnthCB.get())
@@ -72,7 +77,7 @@ def SaveBt_do():
         messagebox.showerror("Filename", "Filename is leeg")
         return
     # Backup maken :
-    filenm=
+    filenm=os.path.join(path, 'DocTreeBackup')
     if os.path.isfile(filenm) == True:
         pass
         #Fout Backupbestand bestaat reeds
