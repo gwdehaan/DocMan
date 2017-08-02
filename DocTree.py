@@ -86,7 +86,7 @@ def SaveBt_do():
     filenmBase, filenmExt = os.path.splitext(filenm)
     BUDir = os.path.join(path, 'DocTreeBackup')
     if os.path.isdir(BUDir) == False:
-        os.path.mkdir(BUDir)
+        os.mkdir(BUDir)
         
     BUFile = os.path.join(BUDir, filenm)
     try:
@@ -95,20 +95,23 @@ def SaveBt_do():
     	messagebox.showerror("Backup", "Backupfile bestaat reeds")
     	return
 	# ************** Kopieer het bestand naar de juiste subir
-	CATDir = os.path.join(DocTreeRoot, cat)
-	os.makedirs(CATDir)
-	CATFile = os.path.join(CATDir, fn)
-	CATFile = os.path.join(CATDir, filenmExt)
+    CATDir = os.path.join(DocTreeRoot, cat)
     try:
-    	shutil.copy(FullPath, CATFile)
-    	try:
-    		os.remove(FullPath)
-    	except:
-    		messagebox.showerror("Delete from sourcedir", "Verwijderen mislukt_")
-    		return
+        os.makedirs(CATDir)
+    except OSError:
+        pass
+    CATFile = os.path.join(CATDir, fn)
+    CATFile = CATFile+ filenmExt
+    try:
+        shutil.copy(FullPath, CATFile)
+        try:
+            os.remove(FullPath)
+        except:
+            messagebox.showerror("Delete from sourcedir", "Verwijderen mislukt_")
+            return
     except:
-    	messagebox.showerror("Copy naar DocTreeRoot", "Bestand bestaat reeds")
-    	return
+        messagebox.showerror("Copy naar DocTreeRoot", "Bestand bestaat reeds")
+        return
     
     # Uitvoeren van de acties :
     # Bepaal de DestDir
@@ -126,7 +129,7 @@ def hello():
 # MAIN()
 # 
 DocTreeRoot="D:\\mijn documenten\\archief\\DocTree"
-print (backupdir)
+
 window =Tk()
 window.title("DocTree")
 
