@@ -4,7 +4,11 @@
 # Datum, Documentsoort en een vrij referentieveld worden opgeslagen in een database.
 # Het is mogelijk om de bestandsnaam aan te passen in de form.
 # Het oorspronkelijke document wordt bewaard in een ./DocTreeBackup subdir van de brondir.
-# Deze versie maakt geen gebruik van classes, daarom wordt gebruik gemaakt van globals
+# Deze versie maakt geen gebruik van classes, daarom wordt gebruik gemaakt van globals.
+#
+#
+# DocTreeRoot- root voor doctree archief
+# Sourcedir - t.b.v. openfilenamebox
 # ****************************************************************************************
 from tkinter import *
 from tkinter import ttk
@@ -14,6 +18,7 @@ from tkinter import messagebox
 import webbrowser as web
 import time
 import os
+import shutil
 
 
 
@@ -31,21 +36,20 @@ def NewPDF():
     # Open de file-open dialog
     # vul de filenaam in FnameEnt, 
     global FullPath
+    global filenmExt
     FullPath = askopenfilename(filetypes=[("pdf Docs","*.pdf")])
  	# Toon de pdf in de default browser
     web.open(FullPath)
     #Poging om de form on top te krijgen
     window.lift()
-   
+    # Toon de filename in de Entrybox
     path, filenm=os.path.split(FullPath)
     filenmBase, filenmExt = os.path.splitext(filenm)
-    # Toon de filename in de Entrybox
     FNameEnt.insert(0, filenmBase)
-	return(FullPath)
    
  
 def FormValidate(event):
-    # print(MnthCB.get())
+    # Wordt aangeroepen bij elke wijziging van een combobox
     dag=DayCB.get()
     maand=MnthCB.get()
     jaar=YearCB.get()
@@ -76,11 +80,36 @@ def SaveBt_do():
     if fn=='':
         messagebox.showerror("Filename", "Filename is leeg")
         return
-    # Backup maken :
-    filenm=os.path.join(path, 'DocTreeBackup')
-    if os.path.isfile(filenm) == True:
-        pass
-        #Fout Backupbestand bestaat reeds
+    # ************* Backup maken :
+    # FullPath is een global met volledig pad en filename naar de inputfile
+    path, filenm=os.path.split(FullPath)
+    filenmBase, filenmExt = os.path.splitext(filenm)
+    BUDir = os.path.join(path, 'DocTreeBackup')
+    if os.path.isdir(BUDir) == False:
+        os.path.mkdir(BUDir)
+        
+    BUFile = os.path.join(BUDir, filenm)
+    try:
+    	shutil.copy(FullPath, BUFile)
+    except:
+    	messagebox.showerror("Backup", "Backupfile bestaat reeds")
+    	return
+	# ************** Kopieer het bestand naar de juiste subir
+	CATDir = os.path.join(DocTreeRoot, cat)
+	os.makedirs(CATDir)
+	CATFile = os.path.join(CATDir, fn)
+	CATFile = os.path.join(CATDir, filenmExt)
+    try:
+    	shutil.copy(FullPath, CATFile)
+    	try:
+    		os.remove(FullPath)
+    	except:
+    		messagebox.showerror("Delete from sourcedir", "Verwijderen mislukt_")
+    		return
+    except:
+    	messagebox.showerror("Copy naar DocTreeRoot", "Bestand bestaat reeds")
+    	return
+    
     # Uitvoeren van de acties :
     # Bepaal de DestDir
     # 1 - kopieer het bestand naar de BackupDir
@@ -96,9 +125,7 @@ def hello():
 #
 # MAIN()
 # 
-SourceDir="D:\\mijn documenten\\archief"
-importdir = "c:\\users\\Documents"
-backupdir = os.path.join(importdir,"DocTreeBackup")
+DocTreeRoot="D:\\mijn documenten\\archief\\DocTree"
 print (backupdir)
 window =Tk()
 window.title("DocTree")
