@@ -9,6 +9,11 @@
 #
 # DocTreeRoot- root voor doctree archief
 # Sourcedir - t.b.v. openfilenamebox
+#
+# 3-8-2017 - Issue - Bij verwijderen van pdf wordt het bestand gelockt
+# doordat Edge deze nog in gebruik heeft : 
+# Om het verwijderen van de pdf mogelijk te maken kan met KillEdge de browser
+# worden afgesloten.
 # ****************************************************************************************
 from tkinter import *
 from tkinter import ttk
@@ -19,6 +24,7 @@ import webbrowser as web
 import time
 import os
 import shutil
+import psutil
 
 
 
@@ -31,8 +37,26 @@ def DateValidate(year, month, day):
     else:
         return True
 
+def KillEdge():
+    '''
+    Functie om Lopende Edge processen te killen
+    '''
+    for proc in psutil.process_iter():
+        if str(proc.name).find('Edge.exe') > 0:
+            proc.kill()
+
 def NewPDF():
-    #Intitialiseren van de formvelden
+    #Intitialiseren van de formvelden   
+    DayCB.set('')
+    MnthCB.set('')
+    YearCB.set('')
+    CatCB.set('')
+    DocCB.set('')
+    RefEnt.delete(0, END)
+    RefEnt.insert(0, '')
+    FNameEnt.delete(0, END)
+    FNameEnt.insert(0, '')
+    SaveBt['state']=DISABLED
     # Open de file-open dialog
     # vul de filenaam in FnameEnt, 
     global FullPath
@@ -45,6 +69,7 @@ def NewPDF():
     # Toon de filename in de Entrybox
     path, filenm=os.path.split(FullPath)
     filenmBase, filenmExt = os.path.splitext(filenm)
+    FNameEnt.delete(0, END)
     FNameEnt.insert(0, filenmBase)
    
  
@@ -80,35 +105,42 @@ def SaveBt_do():
     if fn=='':
         messagebox.showerror("Filename", "Filename is leeg")
         return
+    # Edge afsluiten om te voorkomen dat er locking optreedt bij het verwijderen.
+    KillEdge()
     # ************* Backup maken :
     # FullPath is een global met volledig pad en filename naar de inputfile
     path, filenm=os.path.split(FullPath)
     filenmBase, filenmExt = os.path.splitext(filenm)
     BUDir = os.path.join(path, 'DocTreeBackup')
     if os.path.isdir(BUDir) == False:
-        os.path.mkdir(BUDir)
+        os.mkdir(BUDir)
         
     BUFile = os.path.join(BUDir, filenm)
     try:
-    	shutil.copy(FullPath, BUFile)
+    	shutil.copy2(FullPath, BUFile)
     except:
     	messagebox.showerror("Backup", "Backupfile bestaat reeds")
     	return
 	# ************** Kopieer het bestand naar de juiste subir
-	CATDir = os.path.join(DocTreeRoot, cat)
-	os.makedirs(CATDir)
-	CATFile = os.path.join(CATDir, fn)
-	CATFile = os.path.join(CATDir, filenmExt)
+    CATDir = os.path.join(DocTreeRoot, cat)
     try:
-    	shutil.copy(FullPath, CATFile)
-    	try:
-    		os.remove(FullPath)
-    	except:
-    		messagebox.showerror("Delete from sourcedir", "Verwijderen mislukt_")
-    		return
+        os.makedirs(CATDir)
+    except OSError:
+        pass
+    CATFile = os.path.join(CATDir, fn)
+    CATFile = CATFile+ filenmExt
+    try:
+        shutil.copy2(FullPath, CATFile)
+        try:
+            os.remove(FullPath)
+        except:
+            messagebox.showerror("Delete from sourcedir", "Verwijderen mislukt_")
+            return
     except:
-    	messagebox.showerror("Copy naar DocTreeRoot", "Bestand bestaat reeds")
-    	return
+        messagebox.showerror("Copy naar DocTreeRoot", "Bestand bestaat reeds")
+        return
+    # Alle acties zijn succesvol afgerond. Scherm leeg maken.
+
     
     # Uitvoeren van de acties :
     # Bepaal de DestDir
@@ -126,7 +158,7 @@ def hello():
 # MAIN()
 # 
 DocTreeRoot="D:\\mijn documenten\\archief\\DocTree"
-print (backupdir)
+
 window =Tk()
 window.title("DocTree")
 
