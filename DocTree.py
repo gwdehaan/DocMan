@@ -16,6 +16,8 @@
 # worden afgesloten.
 #
 # copy2 gebruikt, hiermee blijven datum en tijd bewaard.
+# 4-8-2018 
+# SQLITE Db toegevoegd. Tabellen worden gemaakt via sqldocman.py
 # ****************************************************************************************
 from tkinter import *
 from tkinter import ttk
