@@ -14,6 +14,8 @@
 # doordat Edge deze nog in gebruik heeft : 
 # Om het verwijderen van de pdf mogelijk te maken kan met KillEdge de browser
 # worden afgesloten.
+#
+# copy2 gebruikt, hiermee blijven datum en tijd bewaard.
 # ****************************************************************************************
 from tkinter import *
 from tkinter import ttk
@@ -25,7 +27,8 @@ import time
 import os
 import shutil
 import psutil
-
+from datetime import datetime
+import sqlite3 as lite
 
 
 def DateValidate(year, month, day):
@@ -89,6 +92,27 @@ def FormValidate(event):
     else:
         SaveBt['state']=DISABLED
     
+def insDbDocMan(DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
+    con = lite.connect('DocMan.db')
+	# Gebruik de dictionary om velden te selecteren
+    con.row_factory = lite.Row
+    cur =con.cursor()	
+    # Toevoegen record
+    sql = """INSERT INTO DOCMAN Values('""" + DocCat + \
+	"""','""" + DocSoort + \
+	"""','""" + Pad + \
+	"""','""" + Filenaam + \
+	"""','""" + Referentie + \
+	"""','""" + Datum +  \
+	"""');"""
+    try:
+        cur.execute(sql)
+        con.commit()
+    except lite.Error as e:
+        messagebox.showerror("Error DocMan Database", e.args[0])
+    finally:
+    # Afsluiten
+        con.close()
 
 def SaveBt_do():
     # Valideer de datum
@@ -105,6 +129,8 @@ def SaveBt_do():
     if fn=='':
         messagebox.showerror("Filename", "Filename is leeg")
         return
+    # Datum format aanpassen :
+    DocDate = '{:%Y-%m-%d}'.format(datetime(int(jaar),int(maand),int(dag)))
     # Edge afsluiten om te voorkomen dat er locking optreedt bij het verwijderen.
     KillEdge()
     # ************* Backup maken :
@@ -139,7 +165,10 @@ def SaveBt_do():
     except:
         messagebox.showerror("Copy naar DocTreeRoot", "Bestand bestaat reeds")
         return
-    # Alle acties zijn succesvol afgerond. Scherm leeg maken.
+    # Bewaar in de database 
+    insDbDocMan(cat,doc, CATFile, fn, ref, DocDate)
+    # Alle acties zijn succesvol afgerond, volgende
+    NewPDF()
 
     
     # Uitvoeren van de acties :

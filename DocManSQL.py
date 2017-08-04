@@ -20,7 +20,7 @@ class DocManSql:
 	def __del__(self):
 		if self.con:
 			self.con.close()
-			print 'DB Closed'
+			print('DB Closed')
 	
 	def CreateTables(self):
 		# 9-8-2014
@@ -28,8 +28,8 @@ class DocManSql:
 		try:
 			sql="DROP TABLE IF EXISTS DocMan"
 			self.cur.execute(sql)
-		except lite.Error, e:
-			print e.args[0] # dit is de letterlijke tekst van de fout.
+		except lite.Error as e:
+			print (e.args[0]) # dit is de letterlijke tekst van de fout.
 		sql="""CREATE TABLE DocMan
 		 (DocCat TEXT
 		  ,DocSoort TEXT
@@ -42,14 +42,14 @@ class DocManSql:
 		 """
 		try:
 			self.cur.execute(sql)
-		except lite.Error, e:
-			print e.args[0]
+		except lite.Error as e:
+			print (e.args[0])
 			# Categorie
 		try:
 			sql="DROP TABLE IF EXISTS DocCat"
 			self.cur.execute(sql)
-		except lite.Error, e:
-			print e.args[0] # dit is de letterlijke tekst van de fout.
+		except lite.Error as e:
+			print (e.args[0]) # dit is de letterlijke tekst van de fout.
 		sql="""CREATE TABLE DocCat
 		 (DocCat TEXT
 		  ,PRIMARY KEY(DocCat)
@@ -57,14 +57,14 @@ class DocManSql:
 		 """
 		try:
 			self.cur.execute(sql)
-		except lite.Error, e:
-			print e.args[0]
+		except lite.Error as e:
+			print (e.args[0])
 		#DocSoort
 		try:
 			sql="DROP TABLE IF EXISTS DocSoort"
 			self.cur.execute(sql)
-		except lite.Error, e:
-			print e.args[0] # dit is de letterlijke tekst van de fout.
+		except lite.Error as e:
+			print (e.args[0]) # dit is de letterlijke tekst van de fout.
 		sql="""CREATE TABLE DocSoort
 		 (DocSoort TEXT
 		  ,PRIMARY KEY(DocSoort)
@@ -72,18 +72,30 @@ class DocManSql:
 		 """
 		try:
 			self.cur.execute(sql)
-		except lite.Error, e:
-			print e.args[0]
+		except lite.Error as e:
+			print (e.args[0])
 			
-	def insDocCat(Categorie):
+	def insDocCat(self, Categorie):
 		sql="""INSERT INTO DocCat Values('""" + Categorie + """');"""
 		try:
 			self.cur.execute(sql)
-		except lite.Error, e:
-			print e.args[0]
+			self.con.commit()
+		except lite.Error as e:
+			print (e.args[0])
 			
-	def insDocMan(DocCat, DocSoort, Filenaam, Referentie, Datum):
-		pass
+	def insDocMan(self, DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
+		sql = """INSERT INTO DOCMAN Values('""" + DocCat + \
+		"""','""" + DocSoort + \
+		"""','""" + Pad + \
+		"""','""" + Filenaam + \
+		"""','""" + Referentie + \
+		"""','""" + Datum +  \
+		"""');"""
+		try:
+			self.cur.execute(sql)
+			self.con.commit()
+		except lite.Error as e:
+			print (e.args[0])		
 		
 # Change - SQL's kunnen INSERTS of UPDATES zijn.
 # Exceptions door fouten in de primary key; melden via de UI
@@ -98,6 +110,8 @@ class DocManSql:
 # *************************************************************************************		
 t=DocManSql()
 t.CreateTables()
-t.InsDocCat('Software')
+t.insDocCat('Software')
+t.insDocMan('Software','Factuur','c:\\mijn documenten\\test\\6556449.pdf', '6556449', 'ANS784448', '2009-01-12')
 del t
+# insert into DocMan Values ('Software','Factuur','c:\mijn documenten\test\6556447.pdf', '6556447', 'ANS784448', '2009-01-12');
 
