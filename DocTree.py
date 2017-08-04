@@ -30,7 +30,9 @@ import psutil
 from datetime import datetime
 import sqlite3 as lite
 
-
+def hello():
+	pass
+	
 def DateValidate(year, month, day):
     this_date = '%s/%s/%s' % (month, day, year)
     try:
@@ -149,12 +151,15 @@ def SaveBt_do():
     	return
 	# ************** Kopieer het bestand naar de juiste subir
     CATDir = os.path.join(DocTreeRoot, cat)
+    RELDir = cat
     try:
         os.makedirs(CATDir)
     except OSError:
         pass
     CATFile = os.path.join(CATDir, fn)
+    RELFile = os.path.join(RELDir, fn)
     CATFile = CATFile+ filenmExt
+    RELFile = RELFile+ filenmExt
     try:
         shutil.copy2(FullPath, CATFile)
         try:
@@ -166,7 +171,7 @@ def SaveBt_do():
         messagebox.showerror("Copy naar DocTreeRoot", "Bestand bestaat reeds")
         return
     # Bewaar in de database 
-    insDbDocMan(cat,doc, CATFile, fn, ref, DocDate)
+    insDbDocMan(cat,doc, RELFile, fn, ref, DocDate)
     # Alle acties zijn succesvol afgerond, volgende
     NewPDF()
 
@@ -181,8 +186,7 @@ def SaveBt_do():
     # os.rename(src,dst)
     # 3 - Verwijder het bestand uit de SourceDir 
 
-def hello():
-    pass
+
 #
 # MAIN()
 # 
