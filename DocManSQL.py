@@ -22,42 +22,82 @@ class DocManSql:
 			self.con.close()
 			print 'DB Closed'
 	
-	def CreateTable(self):
+	def CreateTables(self):
 		# 9-8-2014
+		# 3-8-2017 - uitgebreid met Categorie en DocSoort
 		try:
 			sql="DROP TABLE IF EXISTS DocMan"
 			self.cur.execute(sql)
 		except lite.Error, e:
 			print e.args[0] # dit is de letterlijke tekst van de fout.
 		sql="""CREATE TABLE DocMan
-		 (Category TEXT
-		  ,Bron TEXT
+		 (DocCat TEXT
+		  ,DocSoort TEXT
 		  ,Pad TEXT
 		  ,Filenaam TEXT
-		  ,Omschrijvng TEXT
+		  ,Referentie TEXT
 		  ,Datum DATETIME
-		  ,Boek TEXT
-		  ,Bladzijde INTEGER
-		  ,PRIMARY KEY(Pad, Filenaam)
+		  ,PRIMARY KEY(Pad)
 		  )
 		 """
 		try:
 			self.cur.execute(sql)
 		except lite.Error, e:
 			print e.args[0]
-
+			# Categorie
+		try:
+			sql="DROP TABLE IF EXISTS DocCat"
+			self.cur.execute(sql)
+		except lite.Error, e:
+			print e.args[0] # dit is de letterlijke tekst van de fout.
+		sql="""CREATE TABLE DocCat
+		 (DocCat TEXT
+		  ,PRIMARY KEY(DocCat)
+		  )
+		 """
+		try:
+			self.cur.execute(sql)
+		except lite.Error, e:
+			print e.args[0]
+		#DocSoort
+		try:
+			sql="DROP TABLE IF EXISTS DocSoort"
+			self.cur.execute(sql)
+		except lite.Error, e:
+			print e.args[0] # dit is de letterlijke tekst van de fout.
+		sql="""CREATE TABLE DocSoort
+		 (DocSoort TEXT
+		  ,PRIMARY KEY(DocSoort)
+		  )
+		 """
+		try:
+			self.cur.execute(sql)
+		except lite.Error, e:
+			print e.args[0]
+			
+	def insDocCat(Categorie):
+		sql="""INSERT INTO DocCat Values('""" + Categorie + """');"""
+		try:
+			self.cur.execute(sql)
+		except lite.Error, e:
+			print e.args[0]
+			
+	def insDocMan(DocCat, DocSoort, Filenaam, Referentie, Datum):
+		pass
+		
 # Change - SQL's kunnen INSERTS of UPDATES zijn.
 # Exceptions door fouten in de primary key; melden via de UI
-def Change(self, CSQL)	:
-	self.cur.execute(CSQL)
-	self.con.commit()
+	def Change(self, CSQL)	:
+		self.cur.execute(CSQL)
+		self.con.commit()
 #  Query - return een dictionary met veldnamen en waarden
-def Query(self, QSQL) :
-	self.cur.execute(QSQL)
+	def Query(self, QSQL) :
+		self.cur.execute(QSQL)
 # Uitzoeken hoe het row object is opgebouwd (tuple ?) return een list of rows?
 		
 # *************************************************************************************		
 t=DocManSql()
-t.CreateTable()
+t.CreateTables()
+t.InsDocCat('Software')
 del t
 
