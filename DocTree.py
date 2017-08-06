@@ -154,7 +154,8 @@ def SaveBt_do():
     	return
 	# ************** Kopieer het bestand naar de juiste subir
     CATDir = os.path.join(DocTreeRoot, cat)
-    RELDir = cat
+    CATDir = os.path.join(CATDir, jaar)
+    RELDir = os.path.join(cat, jaar)
     try:
         os.makedirs(CATDir)
     except OSError:
