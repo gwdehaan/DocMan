@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+#
 # GdH - DocTREE (16-7-2017)
 # Doel : Rubriceren van archief aan pdf's opgebouwd vanaf 2011. Documenten worden in een boom
 # opgenomen op basis van een categorie.
@@ -193,7 +195,7 @@ def SaveBt_do():
 #
 # MAIN()
 # 
-DocTreeRoot="D:\\mijn documenten\\archief\\DocTree"
+DocTreeRoot="D:\\Bestanden\\OneDrive\\Archief\\DocTree"
 
 window =Tk()
 window.title("DocTree")
@@ -233,7 +235,7 @@ DatumLabel.pack(side = LEFT)
 #
 #
 
-DayCB = ttk.Combobox(DatumFrame,height=12, width=2, state='readonly')
+DayCB = ttk.Combobox(DatumFrame,height=12, width=2)
 DayCB.pack(side = LEFT)
 Days=[]
 for i in range(1,32):
@@ -247,7 +249,7 @@ label_1.pack(side=LEFT)
 # ttk combobox voor Maanddeel van de datum
 #
 
-MnthCB = ttk.Combobox(DatumFrame,height=12, width=2, state='readonly')
+MnthCB = ttk.Combobox(DatumFrame,height=12, width=2)
 MnthCB.pack(side = LEFT)
 maand=[1,2,3,4,5,6,7,8,9,10,11,12]
 #MnthCB['values']=maand
@@ -260,7 +262,7 @@ label_2.pack(side=LEFT)
 # ttk combobox voor Maanddeel van de datum
 #
 
-YearCB = ttk.Combobox(DatumFrame,height=12, width=4, state='readonly')
+YearCB = ttk.Combobox(DatumFrame,height=12, width=4)
 YearCB.pack(side = LEFT)
 Years=[]
 for i in range(1961, 2018):
@@ -279,8 +281,8 @@ CatCBLabel= Label(CatFrame, text="Categorie")
 CatCBLabel.pack(side=LEFT)
 CatCB = ttk.Combobox(CatFrame,height=12, width=30, state='readonly')
 CatCB.pack(side = LEFT)
-CatCBVal=["Hypotheek", "Elektronica", "Sparen", "Verzekering", "Auto", "Werk" 
-, "BMN", "Pensioen","Willy","Fokke","Recept"]
+CatCBVal=["Belastingen","Hypotheek", "Hardware","Software","Elektronica", "Sparen", "Verzekering", "Auto", "Werk" 
+, "BMN", "Pensioen","Willy","Fokke", "LG73", "Apparaat"]
 CatCBVal.sort()
 #MnthCB['values']=maand
 CatCB.config(values=CatCBVal)
@@ -295,7 +297,7 @@ DocCBLabel= Label(DocFrame, text="Document")
 DocCBLabel.pack(side=LEFT)
 DocCB = ttk.Combobox(DocFrame,height=12, width=30, state='readonly')
 DocCB.pack(side = LEFT)
-DocCBVal=["Factuur", "Tijdschrift", "Overzicht", "Brief", "Recept", "Salaris" 
+DocCBVal=["Factuur", "Tijdschrift", "Artikel", "Aanmaning", "Overzicht", "Brief", "Recept", "Salaris" 
 , "Pakbon", "Gebruiksaanwijzing","Nostalgie"]
 DocCBVal.sort()
 #MnthCB['values']=maand
@@ -307,14 +309,14 @@ DocCB.bind('<<ComboboxSelected>>', FormValidate)
 RefFrame= Frame(window, relief=SUNKEN, bd=2)
 RefFrame.pack(ipady=10, fill = X)
 RefEntLabel=Label(RefFrame, text="Referentie")
-RefEnt = Entry(RefFrame, width=40)
+RefEnt = Entry(RefFrame, width=50)
 RefEntLabel.pack(side = LEFT)
 RefEnt.pack(side = LEFT)
 
 FNameFrame= Frame(window, relief=SUNKEN, bd=2)
 FNameFrame.pack(ipady=10, fill = X)
 FNameEntLabel=Label(FNameFrame, text="Filename")
-FNameEnt = Entry(FNameFrame, width=40)
+FNameEnt = Entry(FNameFrame, width=50)
 FNameEntLabel.pack(side = LEFT)
 FNameEnt.pack(side = LEFT)
 
