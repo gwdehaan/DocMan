@@ -282,8 +282,8 @@ CatCBLabel= Label(CatFrame, text="Categorie")
 CatCBLabel.pack(side=LEFT)
 CatCB = ttk.Combobox(CatFrame,height=12, width=30, state='readonly')
 CatCB.pack(side = LEFT)
-CatCBVal=["Belastingen","Hypotheek", "Hardware","Software","Elektronica", "Sparen", "Verzekering", "Auto", "Werk" 
-, "BMN", "Pensioen","Willy","Fokke", "LG73", "Apparaat"]
+CatCBVal=["Motor", "Belastingen","Hypotheek", "Hardware","Software","Elektronica", "Sparen", "Verzekering", "Auto", "Werk" 
+, "BMN", "Pensioen","Willy","Fokke", "LG73", "Apparaat", "Familie", "Geert"]
 CatCBVal.sort()
 #MnthCB['values']=maand
 CatCB.config(values=CatCBVal)
@@ -299,7 +299,7 @@ DocCBLabel.pack(side=LEFT)
 DocCB = ttk.Combobox(DocFrame,height=12, width=30, state='readonly')
 DocCB.pack(side = LEFT)
 DocCBVal=["Factuur", "Tijdschrift", "Artikel", "Aanmaning", "Overzicht", "Brief", "Recept", "Salaris" 
-, "Pakbon", "Gebruiksaanwijzing","Nostalgie"]
+, "Pakbon", "Gebruiksaanwijzing", "Garantie", "Nostalgie", "Bevestiging", "Folder"]
 DocCBVal.sort()
 #MnthCB['values']=maand
 DocCB.config(values=DocCBVal)
