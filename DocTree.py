@@ -192,6 +192,12 @@ def SaveBt_do():
     # os.rename(src,dst)
     # 3 - Verwijder het bestand uit de SourceDir 
 
+def DumpDbDocMan():
+	'''
+	maak een volledige dump naar een csv file.
+	DocManDb<timestamp>.csv
+	'''
+	pass
 
 #
 # MAIN()
