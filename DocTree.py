@@ -299,7 +299,7 @@ DocCBLabel.pack(side=LEFT)
 DocCB = ttk.Combobox(DocFrame,height=12, width=30, state='readonly')
 DocCB.pack(side = LEFT)
 DocCBVal=["Factuur", "Tijdschrift", "Artikel", "Aanmaning", "Overzicht", "Brief", "Recept", "Salaris" 
-, "Pakbon", "Gebruiksaanwijzing", "Garantie", "Nostalgie", "Bevestiging", "Folder"]
+, "Pakbon", "Gebruiksaanwijzing", "Garantie", "Nostalgie", "Bevestiging", "Folder", "Schema"]
 DocCBVal.sort()
 #MnthCB['values']=maand
 DocCB.config(values=DocCBVal)
