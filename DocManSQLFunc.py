@@ -6,15 +6,19 @@ def MergeDocMan():
 	- voer een query uit - resulaat is een list of lists
 	'''
 	con = lite.connect('DocMan.db')
+	con2 = lite.connect('DocMan2.db)
 	# Gebruik de dictionary om velden te selecteren, daarmee kan de standaard print(row) niet werken. Geeft dan alleen de memory locatie.
 	#con.row_factory = lite.Row
-	cur = con.cursor()		
+	cur = con.cursor()
+	cur2 = con2.cursor()
+	
 	sql="""SELECT * FROM DocMan;"""
 	try:
 		cur.execute(sql)
 		rows = cur.fetchall()
 		print (rows)
-		cur.executemany("INSERT INTO DocMan VALUES(?, ?, ?, ?, ?, ?)", rows)
+		cur2.executemany("INSERT INTO DocMan VALUES(?, ?, ?, ?, ?, ?)", rows)
+		
 		for row in rows:
 			print(row)
 	#		for i in row:
