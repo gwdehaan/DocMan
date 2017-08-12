@@ -100,7 +100,7 @@ def FormValidate(event):
         SaveBt['state']=DISABLED
     
 def insDbDocMan(DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
-    con = lite.connect('d:\\bestanden\dropbox\\DocMan\\DocMan.db')
+    con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
 	# Gebruik de dictionary om velden te selecteren
     con.row_factory = lite.Row
     cur =con.cursor()	
@@ -193,11 +193,26 @@ def SaveBt_do():
     # 3 - Verwijder het bestand uit de SourceDir 
 
 def DumpDbDocMan():
-	'''
-	maak een volledige dump naar een csv file.
-	DocManDb<timestamp>.csv
-	'''
-	pass
+    '''
+    maak een volledige dump naar een csv file.
+    DocManDb<timestamp>.csv
+    '''
+    con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
+
+    cur = con.cursor()
+
+    sql="""SELECT * FROM DocMan;"""
+    try:
+        cur.execute(sql)
+        rows = cur.fetchall()
+        # ToDo Nu rows aanbieden aan de CSV module voor export
+    except lite.Error as e:
+        messagebox.showerror("Dump naar CSV", e.args[0])
+        return
+
+    if con:
+        con.close()
+
 
 #
 # MAIN()
