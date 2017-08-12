@@ -100,7 +100,7 @@ def FormValidate(event):
         SaveBt['state']=DISABLED
     
 def insDbDocMan(DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
-    con = lite.connect('DocMan.db')
+    con = lite.connect('d:\\bestanden\dropbox\\DocMan\\DocMan.db')
 	# Gebruik de dictionary om velden te selecteren
     con.row_factory = lite.Row
     cur =con.cursor()	
@@ -305,7 +305,7 @@ DocCBLabel.pack(side=LEFT)
 DocCB = ttk.Combobox(DocFrame,height=12, width=30, state='readonly')
 DocCB.pack(side = LEFT)
 DocCBVal=["Factuur", "Tijdschrift", "Artikel", "Aanmaning", "Overzicht", "Brief", "Recept", "Salaris" 
-, "Pakbon", "Gebruiksaanwijzing", "Garantie", "Nostalgie", "Bevestiging", "Folder"]
+, "Pakbon", "Gebruiksaanwijzing", "Garantie", "Nostalgie", "Bevestiging", "Folder", "Schema"]
 DocCBVal.sort()
 #MnthCB['values']=maand
 DocCB.config(values=DocCBVal)

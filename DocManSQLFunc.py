@@ -4,6 +4,7 @@ def MergeDocMan():
 	'''
 	Voeg records uit een andere Db toe aan de productie Db
 	- voer een query uit - resulaat is een list of lists
+	wordt via executemany ingelezen in de productie Db, unieke sleutel op pad.
 	'''
 	con = lite.connect('DocMan.db')
 	con2 = lite.connect('DocMan2.db)
