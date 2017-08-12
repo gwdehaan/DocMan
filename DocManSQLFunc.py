@@ -5,7 +5,7 @@ def MergeDocMan():
 	Voeg records uit een andere Db toe aan de productie Db
 	- voer een query uit - resulaat is een list of lists
 	'''
-	con = lite.connect('DocMan.db')
+	con = lite.connect('d:\\bestanden\\dropbox\docman\DocMan.db')
 	# Gebruik de dictionary om velden te selecteren, daarmee kan de standaard print(row) niet werken. Geeft dan alleen de memory locatie.
 	#con.row_factory = lite.Row
 	cur = con.cursor()		
@@ -13,8 +13,8 @@ def MergeDocMan():
 	try:
 		cur.execute(sql)
 		rows = cur.fetchall()
-		print (rows)
-		cur.executemany("INSERT INTO DocMan VALUES(?, ?, ?, ?, ?, ?)", rows)
+		#print (rows)
+		#cur.executemany("INSERT INTO DocMan VALUES(?, ?, ?, ?, ?, ?)", rows)
 		for row in rows:
 			print(row)
 	#		for i in row:

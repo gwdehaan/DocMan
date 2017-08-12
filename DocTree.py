@@ -100,7 +100,7 @@ def FormValidate(event):
         SaveBt['state']=DISABLED
     
 def insDbDocMan(DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
-    con = lite.connect('DocMan.db')
+    con = lite.connect('d:\\bestanden\dropbox\\DocMan\\DocMan.db')
 	# Gebruik de dictionary om velden te selecteren
     con.row_factory = lite.Row
     cur =con.cursor()	
