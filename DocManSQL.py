@@ -1,5 +1,6 @@
 import sqlite3 as lite
-
+import csv
+from datetime import datetime
 """
 DocManSql - wrapper om SQLite
 Exceptions : moeten door de UI worden afgehandeld.
@@ -12,9 +13,18 @@ class DocManSql:
 	
 	
 	def __init__(self):
-		self.con = lite.connect('DocMan.db')
+		# >>> if platform.uname().node == 'GdH-Surface':
+		# ...     print(platform.uname())
+		# ...
+		# uname_result(system='Windows', node='GdH-Surface', release='10', version='10.0.15063', machine='AMD64', processor='Intel64 Family 6 Model 78 Stepping 3, GenuineIntel')
+		# >>>
+		# GreyHound
+		# self.con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
+		# Surface
+		self.con = lite.connect('C:\\Users\\Geert\\OneDrive\\Archief\\DocMan.db')
+		# C:\Users\Geert\OneDrive\Archief
 		# Gebruik de dictionary om velden te selecteren
-		self.con.row_factory = lite.Row
+		# (GdH - Niet) self.con.row_factory = lite.Row
 		self.cur =self.con.cursor()	
 		
 	def __del__(self):
@@ -82,21 +92,36 @@ class DocManSql:
 			self.con.commit()
 		except lite.Error as e:
 			print (e.args[0])
-			
-	def MergeDocMan(self):
-	'''
-	Voeg records uit een andere Db toe aan de productie Db
-	- voer een query uit - resulaat is een list of lists
-	'''
+
+	def DumpDbDocMan(self):
+		'''
+		maak een volledige dump naar een csv file.
+		DocManDb<timestamp>.csv
+		print(datetime.now().strftime('%Y%m%d%H%M%S'))
+		'''
+
 		sql="""SELECT * FROM DocMan;"""
 		try:
 			self.cur.execute(sql)
-			rows = cur.fetchall()
+			rows = self.cur.fetchall()
 			for row in rows:
-				print row
+				print(row)
+        	# ToDo Nu rows aanbieden aan de CSV module voor export
 		except lite.Error as e:
-			print (e.args[0])
-			
+			print("Dump naar CSV", e.args[0])
+			exit()
+
+		fname = 'DocMan' + datetime.now().strftime('%Y%m%d%H%M%S') + '.csv'
+		print(fname)
+		header=['DocCat' ,'DocSoort','Pad','Filenaam','Referentie' ,'Datum']
+		with open(fname, 'wt') as csvout:
+			file_writer = csv.writer(csvout, dialect='unix')
+			file_writer.writerow(header)
+			file_writer.writerows(rows)
+
+		if self.con:
+			self.con.close()
+		
 	def insDocMan(self, DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
 		sql = """INSERT INTO DOCMAN Values('""" + DocCat + \
 		"""','""" + DocSoort + \
@@ -126,7 +151,7 @@ t=DocManSql()
 #5t.CreateTables()
 #t.insDocCat('Software')
 #t.insDocMan('Software','Factuur','c:\\mijn documenten\\test\\6556449.pdf', '6556449', 'ANS784448', '2009-01-12')
-t.MergeDocMan()
+t.DumpDbDocMan()
 del t
 # insert into DocMan Values ('Software','Factuur','c:\mijn documenten\test\6556447.pdf', '6556447', 'ANS784448', '2009-01-12');
 
