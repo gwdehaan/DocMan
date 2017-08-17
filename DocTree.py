@@ -116,6 +116,9 @@ def insDbDocMan(DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
         cur.execute(sql)
         con.commit()
     except lite.Error as e:
+        # Om de SQL interactie in een class onder te brengen zou een methode voor 
+        # het weergeven van de foutmelding (standaard via printcommando's) voor
+        # gebruik met bijv. TKinter kunnen worden overruled. (GdH - 12-8-2017) 
         messagebox.showerror("Error DocMan Database", e.args[0])
     finally:
     # Afsluiten
