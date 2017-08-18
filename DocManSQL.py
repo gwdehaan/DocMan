@@ -136,6 +136,28 @@ class DocManSql:
 		except lite.Error as e:
 			print (e.args[0])		
 		
+		
+	def IntCheckFilesFromDb(self, DocRoot):
+		'''
+		integriteitscheck : loop door de Db en controleer of de file aanwezig is volgens het pad.
+		Het pad wordt samemgesteld op basis van de rubriek en jaar informatie.
+		- select * from DocMan.
+		- loop door cursor
+		- haal variabelen op (datum, categorie, fname)
+		- maak en test het pad
+		- try /except
+		- test NOK: door naar handler
+		- standaard handler : print de betreffende file op de standaard output.
+		- handler kan worden overruled in TKinter bijvoorbeeld om files in een listboc te tonen
+		
+		'''
+		pass
+	
+	def IntCheckDbFromFiles(self, DocRoot):
+		'''
+		'''
+		pass
+		
 # Change - SQL's kunnen INSERTS of UPDATES zijn.
 # Exceptions door fouten in de primary key; melden via de UI
 	def Change(self, CSQL)	:
