@@ -18,10 +18,12 @@ class DocManSql:
 		# ...
 		# uname_result(system='Windows', node='GdH-Surface', release='10', version='10.0.15063', machine='AMD64', processor='Intel64 Family 6 Model 78 Stepping 3, GenuineIntel')
 		# >>>
-		# GreyHound
+		# GreyHound ******************************************************************
 		# self.con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
-		# Surface
-		self.con = lite.connect('C:\\Users\\Geert\\OneDrive\\Archief\\DocMan.db')
+		# Surface ********************************************************************
+		# self.con = lite.connect('C:\\Users\\Geert\\OneDrive\\Archief\\DocMan.db')
+		# Test ***********************************************************************
+		self.con = lite.connect('DocMan.db')
 		# C:\Users\Geert\OneDrive\Archief
 		# Gebruik de dictionary om velden te selecteren
 		# (GdH - Niet) self.con.row_factory = lite.Row
@@ -123,15 +125,10 @@ class DocManSql:
 			self.con.close()
 		
 	def insDocMan(self, DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
-		sql = """INSERT INTO DOCMAN Values('""" + DocCat + \
-		"""','""" + DocSoort + \
-		"""','""" + Pad + \
-		"""','""" + Filenaam + \
-		"""','""" + Referentie + \
-		"""','""" + Datum +  \
-		"""');"""
+	
 		try:
-			self.cur.execute(sql)
+			#self.cur.execute(sql)
+			self.cur.execute("INSERT INTO DocMan Values(?,?,?,?,?,?)", (DocCat, DocSoort, Pad, Filenaam, Referentie, Datum)) 
 			self.con.commit()
 		except lite.Error as e:
 			print (e.args[0])		
@@ -150,7 +147,7 @@ class DocManSql:
 t=DocManSql()
 #5t.CreateTables()
 #t.insDocCat('Software')
-#t.insDocMan('Software','Factuur','c:\\mijn documenten\\test\\6556449.pdf', '6556449', 'ANS784448', '2009-01-12')
+t.insDocMan('Software','Factuur','c:\\mijn documenten\\test\\6556449.pdf', '6556449', 'ANS784448', '2009-01-12')
 t.DumpDbDocMan()
 del t
 # insert into DocMan Values ('Software','Factuur','c:\mijn documenten\test\6556447.pdf', '6556447', 'ANS784448', '2009-01-12');
