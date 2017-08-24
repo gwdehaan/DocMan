@@ -1,5 +1,6 @@
 import sqlite3 as lite
 import csv
+import os
 from datetime import datetime
 """
 DocManSql - wrapper om SQLite
@@ -134,7 +135,14 @@ class DocManSql:
 			print (e.args[0])		
 		
 		
-	def IntCheckFilesFromDb(self, DocRoot):
+	def DbRecordMissingHandler(self, FilePad):
+		'''
+		Handler voor het geval de integriteitscheck tussen Db en filesysteem mislukt.
+		standaard wordt deze geprint, maar kan door bijvoorbeeld TKinter worden overruled
+		'''
+		print(Filepad, " bestaat in Db, niet op deze bestandsloctie.")
+		
+	def IntCheckFilesFromDb(self, DocTreeRoot):
 		'''
 		integriteitscheck : loop door de Db en controleer of de file aanwezig is volgens het pad.
 		Het pad wordt samemgesteld op basis van de rubriek en jaar informatie.
@@ -148,12 +156,41 @@ class DocManSql:
 		- handler kan worden overruled in TKinter bijvoorbeeld om files in een listboc te tonen
 		
 		'''
-		pass
-	
+		sql="""SELECT DocCat, Filenaam, Datum FROM DocMan ORDER BY DocCat, datum;"""
+		try:
+			self.cur.execute(sql)
+			rows = self.cur.fetchall()
+			for row in rows:
+				print(row)
+				# Ophalen van de velden
+				DocCat = row[0]
+				Filenaam = row[1]
+				Datum = row[2]
+				jaar=Datum[:4]
+				# pad samenstellen
+				FullPath = os.path.join(DocTreeRoot, DocCat)
+				FullPath = os.path.join(FullPath, jaar)
+				FullPath = os.path.join(FullPath, Filenaam)
+				if os.path.isfile(FullPath) == False:
+					# Db record bestaat niet op schijf.
+					DbRecordMissingHandler(FullPath)
+				
+		except lite.Error as e:
+			print("Integriteitscheck op Db", e.args[0])
+			exit()
+
+
+
+			
 	def IntCheckDbFromFiles(self, DocRoot):
 		'''
 		'''
-		pass
+		for root, dirs, files in os.walk(DocRoot, topdown=False):
+
+			for name in files:
+				zk=name.find('.pdf')
+				if zk != -1:
+					Process(os.path.join(root, name))
 		
 # Change - SQL's kunnen INSERTS of UPDATES zijn.
 # Exceptions door fouten in de primary key; melden via de UI
