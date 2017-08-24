@@ -123,18 +123,35 @@ class DocManSql:
 			self.con.close()
 		
 	def insDocMan(self, DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
-		sql = """INSERT INTO DOCMAN Values('""" + DocCat + \
-		"""','""" + DocSoort + \
-		"""','""" + Pad + \
-		"""','""" + Filenaam + \
-		"""','""" + Referentie + \
-		"""','""" + Datum +  \
-		"""');"""
+	
 		try:
-			self.cur.execute(sql)
+			#self.cur.execute(sql)
+			self.cur.execute("INSERT INTO DocMan Values(?,?,?,?,?,?)", (DocCat, DocSoort, Pad, Filenaam, Referentie, Datum)) 
 			self.con.commit()
 		except lite.Error as e:
 			print (e.args[0])		
+		
+		
+	def IntCheckFilesFromDb(self, DocRoot):
+		'''
+		integriteitscheck : loop door de Db en controleer of de file aanwezig is volgens het pad.
+		Het pad wordt samemgesteld op basis van de rubriek en jaar informatie.
+		- select * from DocMan.
+		- loop door cursor
+		- haal variabelen op (datum, categorie, fname)
+		- maak en test het pad
+		- try /except
+		- test NOK: door naar handler
+		- standaard handler : print de betreffende file op de standaard output.
+		- handler kan worden overruled in TKinter bijvoorbeeld om files in een listboc te tonen
+		
+		'''
+		pass
+	
+	def IntCheckDbFromFiles(self, DocRoot):
+		'''
+		'''
+		pass
 		
 # Change - SQL's kunnen INSERTS of UPDATES zijn.
 # Exceptions door fouten in de primary key; melden via de UI
@@ -150,7 +167,7 @@ class DocManSql:
 t=DocManSql()
 #5t.CreateTables()
 #t.insDocCat('Software')
-#t.insDocMan('Software','Factuur','c:\\mijn documenten\\test\\6556449.pdf', '6556449', 'ANS784448', '2009-01-12')
+t.insDocMan('Software','Factuur','c:\\mijn documenten\\test\\6556449.pdf', '6556449', 'ANS784448', '2009-01-12')
 t.DumpDbDocMan()
 del t
 # insert into DocMan Values ('Software','Factuur','c:\mijn documenten\test\6556447.pdf', '6556447', 'ANS784448', '2009-01-12');
