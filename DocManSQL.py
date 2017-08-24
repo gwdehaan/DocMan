@@ -19,12 +19,10 @@ class DocManSql:
 		# ...
 		# uname_result(system='Windows', node='GdH-Surface', release='10', version='10.0.15063', machine='AMD64', processor='Intel64 Family 6 Model 78 Stepping 3, GenuineIntel')
 		# >>>
-		# GreyHound ******************************************************************
-		# self.con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
-		# Surface ********************************************************************
+		# GreyHound
+		self.con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
+		# Surface
 		# self.con = lite.connect('C:\\Users\\Geert\\OneDrive\\Archief\\DocMan.db')
-		# Test ***********************************************************************
-		self.con = lite.connect('DocMan.db')
 		# C:\Users\Geert\OneDrive\Archief
 		# Gebruik de dictionary om velden te selecteren
 		# (GdH - Niet) self.con.row_factory = lite.Row
