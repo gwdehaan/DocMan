@@ -84,7 +84,11 @@ def NewPDF():
     filenmBase, filenmExt = os.path.splitext(filenm)
     FNameEnt.delete(0, END)
     FNameEnt.insert(0, filenmBase)
-   
+
+def GetCBValuesFromTable(Table):
+	'''
+	'''
+	pass
  
 def FormValidate(event):
     # Wordt aangeroepen bij elke wijziging van een combobox
