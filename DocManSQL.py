@@ -38,7 +38,7 @@ class DocManSql:
 		# 3-8-2017 - uitgebreid met Categorie en DocSoort
 		try:
 			sql="DROP TABLE IF EXISTS DocMan"
-			self.cur.execute(sql)
+			# self.cur.execute(sql)
 		except lite.Error as e:
 			print (e.args[0]) # dit is de letterlijke tekst van de fout.
 		sql="""CREATE TABLE DocMan
@@ -189,7 +189,8 @@ class DocManSql:
 				zk=name.find('.pdf')
 				if zk != -1:
 					Process(os.path.join(root, name))
-		
+	
+
 # Change - SQL's kunnen INSERTS of UPDATES zijn.
 # Exceptions door fouten in de primary key; melden via de UI
 	def Change(self, CSQL)	:
@@ -204,8 +205,9 @@ class DocManSql:
 t=DocManSql()
 #5t.CreateTables()
 #t.insDocCat('Software')
-t.insDocMan('Software','Factuur','c:\\mijn documenten\\test\\6556449.pdf', '6556449', 'ANS784448', '2009-01-12')
-t.DumpDbDocMan()
+#t.insDocMan('Software','Factuur','c:\\mijn documenten\\test\\6556449.pdf', '6556449', 'ANS784448', '2009-01-12')
+#t.DumpDbDocMan()
+t.FillDocCat()
 del t
 # insert into DocMan Values ('Software','Factuur','c:\mijn documenten\test\6556447.pdf', '6556447', 'ANS784448', '2009-01-12');
 

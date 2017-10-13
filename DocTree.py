@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# Install vanuit standaar Python :
+# pip3 install psutil
 #
 # GdH - DocTREE (16-7-2017)
 # Doel : Rubriceren van archief aan pdf's opgebouwd vanaf 2011. Documenten worden in een boom
@@ -34,6 +36,7 @@ import shutil
 import psutil
 from datetime import datetime
 import sqlite3 as lite
+import csv
 
 def hello():
 	pass
@@ -209,6 +212,13 @@ def DumpDbDocMan():
         cur.execute(sql)
         rows = cur.fetchall()
         # ToDo Nu rows aanbieden aan de CSV module voor export
+		fname = 'DocMan' + datetime.now().strftime('%Y%m%d%H%M%S') + '.csv'
+		print(fname)
+		header=['DocCat' ,'DocSoort','Pad','Filenaam','Referentie' ,'Datum']
+		with open(fname, 'wt') as csvout:
+			file_writer = csv.writer(csvout, dialect='unix')
+			file_writer.writerow(header)
+			file_writer.writerows(rows)
     except lite.Error as e:
         messagebox.showerror("Dump naar CSV", e.args[0])
         return
@@ -231,6 +241,7 @@ menubar = Menu(window)
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Open", command=NewPDF)
 filemenu.add_separator()
+filemenu.add_command(label="Dump", command=DumpDocMan)
 filemenu.add_command(label="Exit", command=window.quit)
 menubar.add_cascade(label="File", menu=filemenu)
 
@@ -323,7 +334,7 @@ DocCBLabel.pack(side=LEFT)
 DocCB = ttk.Combobox(DocFrame,height=12, width=30, state='readonly')
 DocCB.pack(side = LEFT)
 DocCBVal=["Factuur", "Tijdschrift", "Artikel", "Aanmaning", "Overzicht", "Brief", "Recept", "Salaris" 
-, "Pakbon", "Gebruiksaanwijzing", "Garantie", "Nostalgie", "Bevestiging", "Folder", "Schema","MindMap"]
+, "Pakbon", "Gebruiksaanwijzing", "Garantie", "Nostalgie", "Bevestiging", "Folder", "Schema","MindMap", "Formulier", "Boek"]
 DocCBVal.sort()
 #MnthCB['values']=maand
 DocCB.config(values=DocCBVal)
