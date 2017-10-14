@@ -87,8 +87,25 @@ def NewPDF():
 
 def GetCBValuesFromTable(Table):
 	'''
+	Haal de inhoud van een ComboBox uit een tabel als list
 	'''
-	pass
+	
+	con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
+	# Gebruik de dictionary om velden te selecteren
+    con.row_factory = lite.Row
+    cur =con.cursor()	
+    # Toevoegen record
+    sql = """select * from """ + Table + """;"""
+    try:
+        cur.execute(sql)
+        rows = cur.fetchall()
+    except lite.Error as e: 
+        messagebox.showerror("Error DocMan Database : "+ Table, e.args[0])
+    finally:
+    # Afsluiten
+        con.close()
+    return rows
+	
  
 def FormValidate(event):
     # Wordt aangeroepen bij elke wijziging van een combobox
@@ -122,7 +139,7 @@ def insDbDocMan(DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
     try:
         cur.execute(sql)
         con.commit()
-    except lite.Error as e:
+   except lite.Error as e:
         # Om de SQL interactie in een class onder te brengen zou een methode voor 
         # het weergeven van de foutmelding (standaard via printcommando's) voor
         # gebruik met bijv. TKinter kunnen worden overruled. (GdH - 12-8-2017) 
@@ -229,7 +246,8 @@ def DumpDbDocMan():
 
     if con:
         con.close()
-
+        messagebox.showerror("Dump DocMan", "Dump naar : " + fname + " gereed")
+  
 
 #
 # MAIN()
