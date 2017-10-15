@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# Install vanuit standaar Python :
+# Install vanuit standaard Python :
 # pip3 install psutil
 #
 # GdH - DocTREE (16-7-2017)
@@ -24,6 +24,7 @@
 #- SQLITE Db toegevoegd. Tabellen worden gemaakt via sqldocman.py
 #- RELFile toegevoegd om relatief pad op te slaan in Db
 # ****************************************************************************************
+# 15-10-2017 - Waardes van de beide comboboxen woren nu uit de database gehaald
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
@@ -86,25 +87,28 @@ def NewPDF():
     FNameEnt.insert(0, filenmBase)
 
 def GetCBValuesFromTable(Table):
-	'''
-	Haal de inhoud van een ComboBox uit een tabel als list
-	'''
-	
-	con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
-	# Gebruik de dictionary om velden te selecteren
+    '''
+    Haal de inhoud van een ComboBox uit een tabel als list
+    '''
+    con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
+    # Gebruik de dictionary om velden te selecteren
     con.row_factory = lite.Row
     cur =con.cursor()	
     # Toevoegen record
     sql = """select * from """ + Table + """;"""
+    explist=[]
     try:
         cur.execute(sql)
         rows = cur.fetchall()
+        for record in rows:
+            explist.append(record[0])
+
     except lite.Error as e: 
         messagebox.showerror("Error DocMan Database : "+ Table, e.args[0])
     finally:
     # Afsluiten
-        con.close()
-    return rows
+        con.close() 
+    return explist
 	
  
 def FormValidate(event):
@@ -129,17 +133,11 @@ def insDbDocMan(DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
     con.row_factory = lite.Row
     cur =con.cursor()	
     # Toevoegen record
-    sql = """INSERT INTO DOCMAN Values('""" + DocCat + \
-	"""','""" + DocSoort + \
-	"""','""" + Pad + \
-	"""','""" + Filenaam + \
-	"""','""" + Referentie + \
-	"""','""" + Datum +  \
-	"""');"""
     try:
-        cur.execute(sql)
+        cur.execute("INSERT INTO DocMan Values(?,?,?,?,?,?)", (DocCat, DocSoort, Pad, Filenaam, Referentie, Datum)) 
         con.commit()
-   except lite.Error as e:
+
+    except lite.Error as e:
         # Om de SQL interactie in een class onder te brengen zou een methode voor 
         # het weergeven van de foutmelding (standaard via printcommando's) voor
         # gebruik met bijv. TKinter kunnen worden overruled. (GdH - 12-8-2017) 
@@ -233,20 +231,19 @@ def DumpDbDocMan():
         cur.execute(sql)
         rows = cur.fetchall()
         # ToDo Nu rows aanbieden aan de CSV module voor export
-		fname = 'DocMan' + datetime.now().strftime('%Y%m%d%H%M%S') + '.csv'
-		print(fname)
-		header=['DocCat' ,'DocSoort','Pad','Filenaam','Referentie' ,'Datum']
-		with open(fname, 'wt') as csvout:
-			file_writer = csv.writer(csvout, dialect='unix')
-			file_writer.writerow(header)
-			file_writer.writerows(rows)
+        fname = 'DocMan' + datetime.now().strftime('%Y%m%d%H%M%S') + '.csv'
+        header=['DocCat' ,'DocSoort','Pad','Filenaam','Referentie' ,'Datum']
+        with open(fname, 'wt') as csvout:
+            file_writer = csv.writer(csvout, dialect='unix')
+            file_writer.writerow(header)
+            file_writer.writerows(rows)
     except lite.Error as e:
         messagebox.showerror("Dump naar CSV", e.args[0])
         return
 
     if con:
         con.close()
-        messagebox.showerror("Dump DocMan", "Dump naar : " + fname + " gereed")
+    messagebox.showerror("Dump DocMan", "Dump naar : " + fname + " gereed")
   
 
 #
@@ -263,7 +260,7 @@ menubar = Menu(window)
 filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Open", command=NewPDF)
 filemenu.add_separator()
-filemenu.add_command(label="Dump", command=DumpDocMan)
+filemenu.add_command(label="Dump", command=DumpDbDocMan)
 filemenu.add_command(label="Exit", command=window.quit)
 menubar.add_cascade(label="File", menu=filemenu)
 
@@ -339,8 +336,9 @@ CatCBLabel= Label(CatFrame, text="Categorie")
 CatCBLabel.pack(side=LEFT)
 CatCB = ttk.Combobox(CatFrame,height=12, width=30, state='readonly')
 CatCB.pack(side = LEFT)
-CatCBVal=["Motor", "Belastingen","Hypotheek", "Hardware","Software","Elektronica", "Sparen", "Verzekering", "Auto", "Werk" 
-, "BMN", "Pensioen","Willy","Fokke", "LG73", "Apparaat", "Familie", "Geert", "Gezondheid", "Nuts", "IT-Alg", "Vakantie"]
+# CatCBVal=["Motor", "Belastingen","Hypotheek", "Hardware","Software","Elektronica", "Sparen", "Verzekering", "Auto", "Werk" 
+#, "BMN", "Pensioen","Willy","Fokke", "LG73", "Apparaat", "Familie", "Geert", "Gezondheid", "Nuts", "IT-Alg", "Vakantie"]
+CatCBVal=GetCBValuesFromTable('DocCat')
 CatCBVal.sort()
 #MnthCB['values']=maand
 CatCB.config(values=CatCBVal)
@@ -355,8 +353,9 @@ DocCBLabel= Label(DocFrame, text="Document")
 DocCBLabel.pack(side=LEFT)
 DocCB = ttk.Combobox(DocFrame,height=12, width=30, state='readonly')
 DocCB.pack(side = LEFT)
-DocCBVal=["Factuur", "Tijdschrift", "Artikel", "Aanmaning", "Overzicht", "Brief", "Recept", "Salaris" 
-, "Pakbon", "Gebruiksaanwijzing", "Garantie", "Nostalgie", "Bevestiging", "Folder", "Schema","MindMap", "Formulier", "Boek"]
+#DocCBVal=["Factuur", "Tijdschrift", "Artikel", "Aanmaning", "Overzicht", "Brief", "Recept", "Salaris" 
+#, "Pakbon", "Gebruiksaanwijzing", "Garantie", "Nostalgie", "Bevestiging", "Folder", "Schema","MindMap", "Formulier", "Boek"]
+DocCBVal = GetCBValuesFromTable('DocSoort')
 DocCBVal.sort()
 #MnthCB['values']=maand
 DocCB.config(values=DocCBVal)
