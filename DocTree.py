@@ -25,6 +25,19 @@
 #- RELFile toegevoegd om relatief pad op te slaan in Db
 # ****************************************************************************************
 # 15-10-2017 - Waardes van de beide comboboxen woren nu uit de database gehaald
+# .gitignore toegevoegd om te voorkomen dat ini en csv files naar github worden gekopieerd
+# ------------------------------------------------------------------------------------------
+#Geert@GreyHound MINGW64 /d/bestanden/Geert/git/Docman (master)
+#$ ls -lt .gitignore
+#-rw-r--r-- 1 Geert 197609 12 okt 15 20:58 .gitignore
+#
+#Geert@GreyHound MINGW64 /d/bestanden/Geert/git/Docman (master)
+#$ cat .gitignore
+#*.csv
+#*.ini
+# ------------------------------------------------------------------------------------------
+
+
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
