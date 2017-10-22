@@ -36,6 +36,9 @@ class DocManSql:
 	def CreateTables(self):
 		# 9-8-2014
 		# 3-8-2017 - uitgebreid met Categorie en DocSoort
+		print('ERROR - Deze functie niet draaien, verwijderd Docman !')
+		return
+		exit
 		try:
 			sql="DROP TABLE IF EXISTS DocMan"
 			# self.cur.execute(sql)
