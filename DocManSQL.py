@@ -2,6 +2,8 @@ import sqlite3 as lite
 import csv
 import os
 from datetime import datetime
+import configparser
+
 """
 DocManSql - wrapper om SQLite
 Exceptions : moeten door de UI worden afgehandeld.
@@ -11,7 +13,8 @@ class DocManSql:
 	# Phytonista : BasisClass voor database van DocMan.
 	con=None
 	cur=None
-	
+	FileLocation=None
+	DbLocation=None	
 	
 	def __init__(self):
 		# >>> if platform.uname().node == 'GdH-Surface':
@@ -20,7 +23,17 @@ class DocManSql:
 		# uname_result(system='Windows', node='GdH-Surface', release='10', version='10.0.15063', machine='AMD64', processor='Intel64 Family 6 Model 78 Stepping 3, GenuineIntel')
 		# >>>
 		# GreyHound
-		self.con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
+		config = configparser.ConfigParser()
+		config.read('DocMan.ini')
+		print(config.sections())
+		# GdH - Dit is de correcte vorm : (16-10-2017) : get !!!
+		try:
+			self.FileLocation = config.get('FileLocations', 'DocTreeRoot')
+			self.DbLocation = config.get('FileLocations', 'DocTreeDB')
+		except:
+			print( 'ERROR - Docman.ini file niet correct')
+			exit(0)
+		self.con = lite.connect(self.DbLocation)
 		# Surface
 		# self.con = lite.connect('C:\\Users\\Geert\\OneDrive\\Archief\\DocMan.db')
 		# C:\Users\Geert\OneDrive\Archief
@@ -141,9 +154,9 @@ class DocManSql:
 		Handler voor het geval de integriteitscheck tussen Db en filesysteem mislukt.
 		standaard wordt deze geprint, maar kan door bijvoorbeeld TKinter worden overruled
 		'''
-		print(Filepad, " bestaat in Db, niet op deze bestandsloctie.")
+		print(FilePad + " bestaat in Db, niet op deze bestandsloctie.")
 		
-	def IntCheckFilesFromDb(self, DocTreeRoot):
+	def IntCheckFilesFromDb(self):
 		'''
 		integriteitscheck : loop door de Db en controleer of de file aanwezig is volgens het pad.
 		Het pad wordt samemgesteld op basis van de rubriek en jaar informatie.
@@ -158,28 +171,34 @@ class DocManSql:
 		
 		'''
 		sql="""SELECT DocCat, Filenaam, Datum FROM DocMan ORDER BY DocCat, datum;"""
+		n = 0 # Aantal missende documenten
 		try:
 			self.cur.execute(sql)
 			rows = self.cur.fetchall()
 			for row in rows:
-				print(row)
+				# print(row)
 				# Ophalen van de velden
 				DocCat = row[0]
 				Filenaam = row[1]
 				Datum = row[2]
 				jaar=Datum[:4]
 				# pad samenstellen
-				FullPath = os.path.join(DocTreeRoot, DocCat)
+				FullPath = os.path.join(self.FileLocation, DocCat)
 				FullPath = os.path.join(FullPath, jaar)
 				FullPath = os.path.join(FullPath, Filenaam)
+				FullPath = os.path.join(FullPath + '.pdf')
 				if os.path.isfile(FullPath) == False:
 					# Db record bestaat niet op schijf.
-					DbRecordMissingHandler(FullPath)
+					n+=1
+					self.DbRecordMissingHandler(FullPath)
 				
 		except lite.Error as e:
 			print("Integriteitscheck op Db", e.args[0])
 			exit()
-
+		if n == 0: 
+			print("Check files from Db - Geen afwijkingen")
+		else:
+			print("Check files from Db")
 
 
 			
@@ -210,7 +229,8 @@ t=DocManSql()
 #t.insDocCat('Software')
 #t.insDocMan('Software','Factuur','c:\\mijn documenten\\test\\6556449.pdf', '6556449', 'ANS784448', '2009-01-12')
 #t.DumpDbDocMan()
-t.FillDocCat()
+#t.DumpDbDocMan()
+t.IntCheckFilesFromDb()
 del t
 # insert into DocMan Values ('Software','Factuur','c:\mijn documenten\test\6556447.pdf', '6556447', 'ANS784448', '2009-01-12');
 
