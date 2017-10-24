@@ -51,6 +51,7 @@ import psutil
 from datetime import datetime
 import sqlite3 as lite
 import csv
+import configparser
 
 def hello():
 	pass
@@ -103,7 +104,8 @@ def GetCBValuesFromTable(Table):
     '''
     Haal de inhoud van een ComboBox uit een tabel als list
     '''
-    con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
+    global DBLocation
+    con = lite.connect(DBLocation)
     # Gebruik de dictionary om velden te selecteren
     con.row_factory = lite.Row
     cur =con.cursor()	
@@ -141,7 +143,9 @@ def FormValidate(event):
         SaveBt['state']=DISABLED
     
 def insDbDocMan(DocCat, DocSoort, Pad, Filenaam, Referentie, Datum):
-    con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
+
+    global DBLocation
+    con = lite.connect(DBLocation)
 	# Gebruik de dictionary om velden te selecteren
     con.row_factory = lite.Row
     cur =con.cursor()	
@@ -235,7 +239,8 @@ def DumpDbDocMan():
     maak een volledige dump naar een csv file.
     DocManDb<timestamp>.csv
     '''
-    con = lite.connect('D:\\Bestanden\\OneDrive\\Archief\\DocMan.db')
+    global DBLocation
+    con = lite.connect(DBLocation)
 
     cur = con.cursor()
 
@@ -262,8 +267,16 @@ def DumpDbDocMan():
 #
 # MAIN()
 # 
-DocTreeRoot="D:\\Bestanden\\OneDrive\\Archief\\DocTree"
+# DocTreeRoot="D:\\Bestanden\\OneDrive\\Archief\\DocTree"
+config = configparser.ConfigParser()
+config.read('DocMan.ini')
 
+try:
+	DocTreeRoot = config.get('FileLocations', 'DocTreeRoot')
+	DBLocation = config.get('FileLocations', 'DocTreeDB')
+except:
+	print( 'ERROR - Docman.ini file niet correct')
+	exit(0)
 window =Tk()
 window.title("DocTree")
 
