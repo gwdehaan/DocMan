@@ -275,8 +275,8 @@ try:
 	DocTreeRoot = config.get('FileLocations', 'DocTreeRoot')
 	DBLocation = config.get('FileLocations', 'DocTreeDB')
 except:
-	print( 'ERROR - Docman.ini file niet correct')
-	exit(0)
+    messagebox.showerror("Dump DocMan", "Docman.ini niet gevonden in : " + os.getcwd())
+    exit(0)
 window =Tk()
 window.title("DocTree")
 
