@@ -39,7 +39,7 @@ class SimpleTable(tk.Frame):
 
         for column in range(columns):
             # standaardfunctie binnen Tk, effect is niet duidelijk
-            self.grid_columnconfigure(column, weight=40)
+            self.grid_columnconfigure(column, weight=1)
 
 
     def set(self, row, column, value):
