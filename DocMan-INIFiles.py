@@ -32,11 +32,16 @@ with open('DocMan.ini', 'w') as configfile:
 
 # ********************************************************* 
 # Lezen
-
+del config
+config = configparser.ConfigParser()
 config.read('DocMan.ini')
 print(config.sections())
 # GdH - Dit is de correcte vorm : (16-10-2017) : get !!!
-FileLocation = config.get('FileLocations', 'DocTreeRoot')
-DbLocation = config.get('FileLocations', 'DocTreeDB')
+try:
+    FileLocation = config.get('FileLocations', 'DocTreeRoot')
+    DbLocation = config.get('FileLocations', 'DocTreeDB')
+except:
+    print( 'ERROR - Docman.ini file niet correct')
+    exit(0)
 print(str(FileLocation))
 print(str(DbLocation))
