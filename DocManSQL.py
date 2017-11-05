@@ -201,6 +201,8 @@ class DocManSql:
 			print("Check files from Db")
 
 
+	def Process(self, VolledigPad):
+		print(VolledigPad)	
 			
 	def IntCheckDbFromFiles(self, DocRoot):
 		'''
@@ -211,6 +213,7 @@ class DocManSql:
 				zk=name.find('.pdf')
 				if zk != -1:
 					Process(os.path.join(root, name))
+					
 	
 
 # Change - SQL's kunnen INSERTS of UPDATES zijn.
