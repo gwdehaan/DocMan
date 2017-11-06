@@ -3,7 +3,7 @@
 # met scrollbars :
 # https://stackoverflow.com/questions/3085696/adding-a-scrollbar-to-a-group-of-widgets-in-tkinter
 
-import Tkinter as tk
+import tkinter as tk
 
 # class die overerft van tk.Tk
 # __init__ wordt overruled.
@@ -33,12 +33,12 @@ class SimpleTable(tk.Frame):
             for column in range(columns):
                 label = tk.Label(self, text="%s/%s" % (row, column), 
                                  borderwidth=0, width=10)
-                label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1)
+                label.grid(row=row, column=column, sticky="nsew", padx=1, pady=1) #padx en pady laten het zwart van het frame doorschijnen
                 current_row.append(label)
             self._widgets.append(current_row)
 
         for column in range(columns):
-            # standaardfunctie binnen Tk
+            # standaardfunctie binnen Tk, effect is niet duidelijk
             self.grid_columnconfigure(column, weight=1)
 
 
