@@ -24,7 +24,7 @@ class Example(tk.Frame):
 
     def populate(self):
         '''Put in some fake data'''
-        for row in range(100):
+        for row in range(2):
             tk.Label(self.frame, text="%s" % row, width=3, borderwidth="1", 
                      relief="solid").grid(row=row, column=0)
             t="this is the second column for row %s" %row
