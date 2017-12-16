@@ -211,12 +211,13 @@ def SaveBt_do():
     try:
         shutil.copy2(FullPath, CATFile)
         try:
+            time.sleep(1)
             os.remove(FullPath)
-        except:
-            messagebox.showerror("Delete from sourcedir", "Verwijderen mislukt_")
+        except Exception as  e:
+            messagebox.showerror("Delete from sourcedir", str(e))
             return
-    except:
-        messagebox.showerror("Copy naar DocTreeRoot", "Bestand bestaat reeds")
+    except Exception as e:
+        messagebox.showerror("Copy naar DocTreeRoot", str(e))
         return
     # Bewaar in de database 
     insDbDocMan(cat,doc, RELFile, fn, ref, DocDate)
@@ -346,7 +347,7 @@ label_2.pack(side=LEFT)
 YearCB = ttk.Combobox(DatumFrame,height=12, width=4)
 YearCB.pack(side = LEFT)
 Years=[]
-for i in range(1961, 2018):
+for i in range(1944, 2018):
     Years.append(i)
 Years.sort(reverse=TRUE)
 #MnthCB['values']=maand
