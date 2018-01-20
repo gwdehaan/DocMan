@@ -1,2 +1,2 @@
-cd D:\Bestanden\Geert\Git\DocMan
-python D:\Bestanden\Geert\Git\DocMan\Doctree.py
+cd C:\Users\Geert\DocMan
+python C:\Users\Geert\DocMan\Doctree.py
