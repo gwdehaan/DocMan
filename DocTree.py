@@ -347,7 +347,7 @@ label_2.pack(side=LEFT)
 YearCB = ttk.Combobox(DatumFrame,height=12, width=4)
 YearCB.pack(side = LEFT)
 Years=[]
-for i in range(1944, 2018):
+for i in range(1933, 2019):
     Years.append(i)
 Years.sort(reverse=TRUE)
 #MnthCB['values']=maand
