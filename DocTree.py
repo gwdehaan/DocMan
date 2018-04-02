@@ -100,6 +100,21 @@ def NewPDF():
     FNameEnt.delete(0, END)
     FNameEnt.insert(0, filenmBase)
 
+def CreatFileName():
+    """
+    Bij nieuwe bestanden de imgxxxxxx vervangen door een filename
+    op basis van de ingevulde omschrijving + Datum
+    """
+    # ophalen van de referentie
+    ref=RefEnt.get() 
+    dag=DayCB.get()
+    maand=MnthCB.get()
+    jaar=YearCB.get()
+    DocDate = '{:%Y-%m-%d}'.format(datetime(int(jaar),int(maand),int(dag)))
+    CreaFilename= ''.join(word.capitalize() for word in ref.split()) + '(' + DocDate + ')'
+    FNameEnt.delete(0, END)
+    FNameEnt.insert(0, CreaFilename)
+
 def GetCBValuesFromTable(Table):
     '''
     Haal de inhoud van een ComboBox uit een tabel als list
@@ -288,6 +303,7 @@ filemenu = Menu(menubar, tearoff=0)
 filemenu.add_command(label="Open", command=NewPDF)
 filemenu.add_separator()
 filemenu.add_command(label="Dump", command=DumpDbDocMan)
+filemenu.add_command(label="Gen Fname", command=CreatFileName)
 filemenu.add_command(label="Exit", command=window.quit)
 menubar.add_cascade(label="File", menu=filemenu)
 
